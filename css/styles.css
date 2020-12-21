@@ -84,3 +84,7 @@ body {
 #name{
     font-size: 40px;
 }
+
+#pet{
+    position: absolute;
+}

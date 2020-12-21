@@ -4,7 +4,7 @@ playwin ={
 }
 
 class interObj {
-    constructor(x,y,width,height){
+    constructor(x,y,width,height,element){
         this.x = x
         this.y = y
         this.width= width
@@ -20,20 +20,28 @@ class interObj {
             dn: false,
             lf: false,
         }
+        this.element = element
     }
 }
 
 class petClass extends interObj {
     constructor(){
-        super(0,0,$('#pet').width,$('#pet').height)
+        super(0,342,$('#pet')[0].clientWidth,$('#pet')[0].clientHeight,$('#pet')[0])
         this.belly = 10
         this.energy = 10
         this.fun = 10
         this.age = 0
-        this.appetite = 0.05
+        this.appetite = 0.005
         this.stamina = 0.001
         this.attention = 0.005
-        this.speed = true
+        this.speed = 5
+
+        this.move = {
+            up: false,
+            ri: true,
+            dn: false,
+            lf: false,
+        }
 
         this.awake = true
         this.alive = true
@@ -41,21 +49,32 @@ class petClass extends interObj {
 }
 
 function move(obj) {
-    if (obj.up && obj.y - obj.speed >= obj.ymin) {
+    if (obj.move.up && obj.y - obj.speed >= obj.ymin) {
         obj.y -= obj.speed
-        playEl[0].style.top =  `${obj.y}px`
+        obj.element.style.top =  `${obj.y}px`
     }
-    if (obj.dn && obj.y + obj.speed <= obj.ymax) {
+    if (obj.move.dn && obj.y + obj.speed <= obj.ymax) {
         obj.y += obj.speed
-        playEl[0].style.top =  `${obj.y}px`
+        obj.element.style.top =  `${obj.y}px`
     }
-    if (obj.lf && obj.x - obj.speed >= obj.xmin) {
+    if (obj.move.lf && obj.x - obj.speed >= obj.xmin) {
         obj.x -= obj.speed
-        playEl[0].style.left =  `${obj.x}px`
+        obj.element.style.left =  `${obj.x}px`
     }
-    if (obj.ri && obj.x + obj.speed <= obj.xmax) {
+    if (obj.move.ri && obj.x + obj.speed <= obj.xmax) {
         obj.x += obj.speed
-        playEl[0].style.left =  `${obj.x}px`
+        obj.element.style.left =  `${obj.x}px`
+    }
+}
+
+function petAi(){
+    if (pet.x >= pet.xmax) {
+        pet.move.ri =false
+        pet.move.lf =true
+    }
+    if (pet.x <= pet.xmin){
+        pet.move.ri = true
+        pet.move.lf = false
     }
 }
 
@@ -100,6 +119,8 @@ function assignEvents() {
 function update(){
     uiUpdate()
     petUpdate()
+    move(pet)
+    petAi()
 }
 
 function uiUpdate() {
@@ -138,6 +159,8 @@ function game() {
 }
 
 const pet = new petClass();
+pet.element.style.top =  `${pet.y}px`
+pet.element.style.left =  `${pet.y}px`
 
 const bellyEl = $('#belly')
 const energyEl = $('#energy')
