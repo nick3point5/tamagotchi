@@ -25,10 +25,14 @@ class interObj {
 class petClass extends interObj {
     constructor(){
         super(0,0,$('#pet').width,$('#pet').height)
-        this.belly = 1
-        this.energy = 1
-        this.fun = 1
+        this.belly = 10
+        this.energy = 10
+        this.fun = 10
         this.age = 0
+        this.appetite = 0.005
+        this.stamina = 0.001
+        this.attention = 0.005
+
         this.awake = true
         this.alive = true
     }
@@ -44,7 +48,7 @@ function feed() {
 
 function sleep() {
     if (pet.energy<10) {
-        pet.energy++
+        pet.energy=10
     }
 }
 
@@ -62,13 +66,21 @@ function assignEvents() {
 
 function update(){
     uiUpdate()
+    petUpdate()
 }
 
 function uiUpdate() {
-    bellyEl.text(`Belly: ${pet.belly}`)
-    energyEl.text(`Energy: ${pet.energy}`)
-    funEl.text(`Entertainment: ${pet.fun}`)
-    ageEl.text(`age: ${pet.age}`)
+    bellyEl.text(`Belly: ${Math.ceil(pet.belly)}`)
+    energyEl.text(`Energy: ${Math.ceil(pet.energy)}`)
+    funEl.text(`Entertainment: ${Math.ceil(pet.fun)}`)
+    ageEl.text(`age: ${Math.floor(pet.age)}`)
+}
+
+function petUpdate(){
+    pet.belly -= pet.appetite
+    pet.energy -= pet.stamina
+    pet.fun -= pet.attention
+
 }
 
 function game() {
