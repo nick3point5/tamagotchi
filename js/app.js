@@ -31,3 +31,25 @@ class petClass extends interObj {
     }
 }
 
+function feed() {
+    console.log('adf');
+    
+}
+
+function sleep() {
+    console.log('assdf');
+}
+
+function play() {
+    console.log('aasdf');
+}
+
+function assignEvents() {
+    $('#feedBtn').on('click', feed)
+    $('#sleepBtn').on('click', sleep)
+    $('#playBtn').on('click', play)
+}
+
+
+
+
