@@ -29,7 +29,7 @@ class petClass extends interObj {
         this.energy = 10
         this.fun = 10
         this.age = 0
-        this.appetite = 0.005
+        this.appetite = 0.05
         this.stamina = 0.001
         this.attention = 0.005
 
@@ -73,14 +73,17 @@ function uiUpdate() {
     bellyEl.text(`Belly: ${Math.ceil(pet.belly)}`)
     energyEl.text(`Energy: ${Math.ceil(pet.energy)}`)
     funEl.text(`Entertainment: ${Math.ceil(pet.fun)}`)
-    ageEl.text(`age: ${Math.floor(pet.age)}`)
+    ageEl.text(`age: ${Math.floor(pet.age)} sec`)
 }
 
 function petUpdate(){
     pet.belly -= pet.appetite
     pet.energy -= pet.stamina
     pet.fun -= pet.attention
-
+    pet.age += 1/20
+    if (pet.belly<=0||pet.energy<=0||pet.fun<=0){
+        pet.alive = false
+    } 
 }
 
 function game() {
@@ -88,6 +91,7 @@ function game() {
     const active = setInterval(() => {
         update()
         if(!pet.alive){
+            uiUpdate()
             clearInterval(active)
         }
     }, 1000/framerate);
