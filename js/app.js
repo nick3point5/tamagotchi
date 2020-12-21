@@ -13,6 +13,7 @@ class interObj {
         this.xmax = playwin.width-width
         this.ymin = 0
         this.ymax = playwin.height-height
+        this.speed = 0
         this.move = {
             up: false,
             ri: false,
@@ -32,10 +33,42 @@ class petClass extends interObj {
         this.appetite = 0.05
         this.stamina = 0.001
         this.attention = 0.005
+        this.speed = true
 
         this.awake = true
         this.alive = true
     }
+}
+
+function move(obj) {
+    if (obj.up && obj.y - obj.speed >= obj.ymin) {
+        obj.y -= obj.speed
+        playEl[0].style.top =  `${obj.y}px`
+    }
+    if (obj.dn && obj.y + obj.speed <= obj.ymax) {
+        obj.y += obj.speed
+        playEl[0].style.top =  `${obj.y}px`
+    }
+    if (obj.lf && obj.x - obj.speed >= obj.xmin) {
+        obj.x -= obj.speed
+        playEl[0].style.left =  `${obj.x}px`
+    }
+    if (obj.ri && obj.x + obj.speed <= obj.xmax) {
+        obj.x += obj.speed
+        playEl[0].style.left =  `${obj.x}px`
+    }
+}
+
+function collision(hitbox,hurtbox){
+    if (
+        hitbox.xpos + hitbox.width > hurtbox.xpos &&
+        hitbox.xpos < hurtbox.xpos + hurtbox.width &&
+        hitbox.ypos + hitbox.width > hurtbox.ypos &&
+        hitbox.ypos < hurtbox.ypos + hurtbox.width
+    ) {
+        return true
+    }
+    return false
 }
 
 
@@ -86,6 +119,11 @@ function petUpdate(){
     } 
 }
 
+function gameover(){
+    gameoverHTML=`<div class="gameover">${$('#name')[0].value} has died</div>`
+    $(gameoverHTML).appendTo($('.play-space'))
+}
+
 function game() {
     const framerate = 20
     const active = setInterval(() => {
@@ -93,6 +131,7 @@ function game() {
         if(!pet.alive){
             uiUpdate()
             clearInterval(active)
+            gameover()
         }
     }, 1000/framerate);
     assignEvents()
