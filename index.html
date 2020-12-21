@@ -8,10 +8,17 @@
     <script src="js/app.js" defer></script>
     <title>Tomagotchi</title>
 </head>
-<body id="bid">
+<body>
     <div class="canvas">
         <div class="ui">
-            <div class="top-ui ui-comp"></div>
+            <div class="top-ui ui-comp">
+                <div class="pet-status">
+                    <div class="gauge" id='belly'>Belly:</div>
+                    <div class="gauge" id='energy'>Energy:</div>
+                    <div class="gauge" id='fun'>Entertainment:</div>
+                    <div class="age" id="age">age:</div>
+                </div>
+            </div>
             <div class="bottom-ui ui-comp">
                 <div class="actions">
                     <buttons class="action" id="feedBtn"></buttons>

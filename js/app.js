@@ -10,9 +10,9 @@ class interObj {
         this.width= width
         this.height= height
         this.xmin = 0
-        this.xmax = win.width-width
+        this.xmax = playwin.width-width
         this.ymin = 0
-        this.ymax = win.height-height
+        this.ymax = playwin.height-height
         this.move = {
             up: false,
             ri: false,
@@ -25,23 +25,33 @@ class interObj {
 class petClass extends interObj {
     constructor(){
         super(0,0,$('#pet').width,$('#pet').height)
-        this.belly = 10
-        this.energy = 10
-        this.fun = 10
+        this.belly = 1
+        this.energy = 1
+        this.fun = 1
+        this.age = 0
+        this.awake = true
+        this.alive = true
     }
 }
 
+
+
 function feed() {
-    console.log('adf');
-    
+    if (pet.belly<10) {
+        pet.belly++
+    }
 }
 
 function sleep() {
-    console.log('assdf');
+    if (pet.energy<10) {
+        pet.energy++
+    }
 }
 
 function play() {
-    console.log('aasdf');
+    if (pet.fun<10) {
+        pet.fun++
+    }
 }
 
 function assignEvents() {
@@ -50,6 +60,33 @@ function assignEvents() {
     $('#playBtn').on('click', play)
 }
 
+function update(){
+    uiUpdate()
+}
 
+function uiUpdate() {
+    bellyEl.text(`Belly: ${pet.belly}`)
+    energyEl.text(`Energy: ${pet.energy}`)
+    funEl.text(`Entertainment: ${pet.fun}`)
+    ageEl.text(`age: ${pet.age}`)
+}
 
+function game() {
+    const framerate = 20
+    const active = setInterval(() => {
+        update()
+        if(!pet.alive){
+            clearInterval(active)
+        }
+    }, 1000/framerate);
+    assignEvents()
+}
 
+const pet = new petClass();
+
+const bellyEl = $('#belly')
+const energyEl = $('#energy')
+const funEl = $('#fun')
+const ageEl = $('#age')
+
+game()
