@@ -62,13 +62,14 @@ function assignEvents() {
 
 function update(){
     uiUpdate()
+    pet.age += 1/20
 }
 
 function uiUpdate() {
     bellyEl.text(`Belly: ${pet.belly}`)
     energyEl.text(`Energy: ${pet.energy}`)
     funEl.text(`Entertainment: ${pet.fun}`)
-    ageEl.text(`age: ${pet.age}`)
+    ageEl.text(`age: ${Math.floor(pet.age)} sec`)
 }
 
 function game() {
