@@ -32,12 +32,12 @@ class petClass extends interObj {
     this.energy = 10;
     this.fun = 10;
     this.age = 0;
-    this.appetite = 0.005;
+    this.appetite = 0.05;
     this.stamina = 0.001;
     this.attention = 0.005;
     this.speed = 5;
-    this.conditions = ['fine','hungry','sleepy','bored']
-    this.currentState = 'fine'
+    this.conditions = ['Happy','hungry','sleepy','bored']
+    this.currentState = 'Happy'
 
 
     this.move = {
@@ -48,7 +48,7 @@ class petClass extends interObj {
     };
 
     this.awake = true;
-    this.alive = true;
+    this.alive = false;
   }
 }
 
@@ -72,7 +72,7 @@ function move(obj) {
 }
 
 function petAi() {
-    if(pet.currentState === 'fine'){
+    if(pet.currentState === 'Happy'){
         statefine()
     }
     if(pet.currentState === 'hungry'){
@@ -109,9 +109,6 @@ function stateBored(){
 }
 
 
-
-
-
 function feed() {
   if (pet.belly < 10) {
     pet.belly++;
@@ -134,6 +131,9 @@ function assignEvents() {
   $("#feedBtn").on("click", feed);
   $("#sleepBtn").on("click", sleep);
   $("#playBtn").on("click", play);
+  if (!pet.alive) {
+      $('.notification').on('click',game)
+  }
 }
 
 function update() {
@@ -148,6 +148,7 @@ function uiUpdate() {
   energyEl.text(`Energy: ${Math.ceil(pet.energy)}`);
   funEl.text(`Entertainment: ${Math.ceil(pet.fun)}`);
   ageEl.text(`age: ${Math.floor(pet.age)} sec`);
+  mesEl.text(`${$("#name")[0].value} is ${pet.currentState}`)
 }
 
 function petUpdate() {
@@ -161,13 +162,7 @@ function petUpdate() {
 }
 
 function gameover() {
-  gameoverHTML = `<div class="gameover">${$("#name")[0].value} has died</div>`;
-  $(gameoverHTML)
-    .appendTo($(".play-space"))
-    .on("click", function () {
-      $(".gameover").remove();
-      game();
-    });
+    mesEl.text(`${$("#name")[0].value} has died`)
   $("#music")[0].pause();
   $("#music")[0].currentTime = 0;
 }
@@ -180,6 +175,7 @@ function Init() {
   pet.age = 0;
   pet.x = 0;
   pet.y = pet.ymax;
+  $("#music")[0].muted = false
   $("#music")[0].play();
 }
 
@@ -195,7 +191,7 @@ function game() {
       gameover();
     }
   }, 1000 / framerate);
-  assignEvents();
+
 }
 
 playwin = {
@@ -211,5 +207,6 @@ const bellyEl = $("#belly");
 const energyEl = $("#energy");
 const funEl = $("#fun");
 const ageEl = $("#age");
+const mesEl = $("#message")
 
-game();
+assignEvents();
