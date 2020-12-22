@@ -142,10 +142,30 @@ function petUpdate(){
 
 function gameover(){
     gameoverHTML=`<div class="gameover">${$('#name')[0].value} has died</div>`
-    $(gameoverHTML).appendTo($('.play-space'))
+    $(gameoverHTML)
+        .appendTo($('.play-space'))
+        .on('click',function () {
+            $(".gameover").remove()
+            game()
+        })
+        $('#music')[0].pause();
+        $('#music')[0].currentTime = 0;
+}
+
+function Init() {
+    pet.alive = true
+    pet.belly = 10
+    pet.energy = 10
+    pet.fun = 10
+    pet.age = 0
+    pet.x = 0
+    pet.y = pet.ymax
+    $('#music')[0].play()
 }
 
 function game() {
+    Init()
+
     const framerate = 20
     const active = setInterval(() => {
         update()
