@@ -110,3 +110,11 @@ body {
 .pet-status{
     width: 200px
 }
+
+#food{
+    position: absolute;
+}
+
+.hidden{
+    opacity: 0;
+}

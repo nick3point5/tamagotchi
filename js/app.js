@@ -19,6 +19,12 @@ class interObj {
   }
 }
 
+class foodClass extends interObj{
+    constructor(x, y, element){
+        super(x, y, element.clientWidth, element.clientHeight, element)
+    }
+}
+
 class petClass extends interObj {
   constructor() {
     super(
@@ -33,8 +39,8 @@ class petClass extends interObj {
     this.fun = 10;
     this.age = 0;
     this.appetite = 0.05;
-    this.stamina = 0.001;
-    this.attention = 0.005;
+    this.stamina = 0.01;
+    this.attention = 0.01;
     this.speed = 5;
     this.conditions = ['Happy','hungry','sleepy','bored']
     this.currentState = 'Happy'
@@ -76,13 +82,13 @@ function petAi() {
         statefine()
     }
     if(pet.currentState === 'hungry'){
-        statefine()
+        stateHungry()
     }
     if(pet.currentState === 'sleepy'){
-        statefine()
+        stateSleepy()
     }
     if(pet.currentState === 'bored'){
-        statefine()
+        stateBored()
     }
 
 }
@@ -99,10 +105,41 @@ function statefine(){
     }
 }
 function stateHungry(){
+    pet.speed = 10
+    // const food = $('#food')[0]
+    if (pet.x < food.x) {
+        pet.move.ri = true;
+        pet.move.lf = false;
+      }else{
+        pet.move.ri = false;
+        pet.move.lf = true;
+      }
+    if (pet.y > food.y) {
+        pet.move.up = true;
+        pet.move.dn = false;
+    }else{
+        pet.move.up = false;
+        pet.move.dn = true;
+    }
+    
+    if(collision(pet,food)){
+        pet.belly=10
+        $('#food').addClass('hidden')
+        food.x = -food.width
+        food.y = food.ymax + food.height
+    }
 
 }
-function stateSleep(){
-
+function stateSleepy(){
+    pet.speed = 1
+    if (pet.x >= pet.xmax) {
+        pet.move.ri = false;
+        pet.move.lf = true;
+      }
+    if (pet.x <= pet.xmin) {
+        pet.move.ri = true;
+        pet.move.lf = false;
+    }
 }
 function stateBored(){
 
@@ -110,9 +147,15 @@ function stateBored(){
 
 
 function feed() {
-  if (pet.belly < 10) {
-    pet.belly++;
-  }
+    createFood();
+}
+
+function createFood() {
+    $('#food').removeClass('hidden')
+    food.x = getRand(food.xmax,food.xmin)
+    food.y = getRand(food.ymax,food.ymin)
+    food.element.style.left = `${food.x}px`;
+    food.element.style.top = `${food.y}px`;
 }
 
 function sleep() {
@@ -135,6 +178,24 @@ function assignEvents() {
       $('.notification').on('click',game)
   }
 }
+
+function collision(hitbox,hurtbox){
+    if (
+        hitbox.x + hitbox.width > hurtbox.x &&
+        hitbox.x < hurtbox.x + hurtbox.width &&
+        hitbox.y + hitbox.width > hurtbox.y &&
+        hitbox.y < hurtbox.y + hurtbox.width
+    ) {
+        return true
+    }
+    return false
+}
+
+function getRand(max, min) {
+    let num = Math.random() * (max + 1 - min) + min - 1;
+    num = Math.ceil(num);
+    return num;
+  }
 
 function update() {
   uiUpdate();
@@ -159,6 +220,23 @@ function petUpdate() {
   if (pet.belly <= 0 || pet.energy <= 0 || pet.fun <= 0) {
     pet.alive = false;
   }
+  conditionCheck()
+
+}
+
+function conditionCheck() {
+    if (pet.belly>=5 && pet.energy>=5 && pet.fun>=5) {
+        pet.currentState=pet.conditions[0]
+    } else
+    if (pet.belly < 5 && pet.belly<=pet.energy && pet.belly<=pet.fun) {
+        pet.currentState=pet.conditions[1]
+    } else
+    if (pet.energy < 5 && pet.energy<=pet.fun && pet.energy<=pet.belly) {
+        pet.currentState=pet.conditions[2]
+    } else
+    if (pet.fun < 5 && pet.fun<=pet.energy && pet.fun<=pet.belly) {
+        pet.currentState=pet.conditions[3]
+    }
 }
 
 function gameover() {
@@ -175,7 +253,6 @@ function Init() {
   pet.age = 0;
   pet.x = 0;
   pet.y = pet.ymax;
-  $("#music")[0].muted = false
   $("#music")[0].play();
 }
 
@@ -202,6 +279,10 @@ playwin = {
 const pet = new petClass();
 pet.element.style.top = `${pet.y}px`;
 pet.element.style.left = `${pet.y}px`;
+
+const food =  new foodClass(0,0,$('#food')[0]);
+food.x = -food.width
+food.y = food.ymax + food.height
 
 const bellyEl = $("#belly");
 const energyEl = $("#energy");
