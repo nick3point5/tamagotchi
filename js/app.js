@@ -36,6 +36,9 @@ class petClass extends interObj {
     this.stamina = 0.001;
     this.attention = 0.005;
     this.speed = 5;
+    this.conditions = ['fine','hungry','sleepy','bored']
+    this.currentState = 'fine'
+
 
     this.move = {
       up: false,
@@ -69,15 +72,45 @@ function move(obj) {
 }
 
 function petAi() {
-  if (pet.x >= pet.xmax) {
-    pet.move.ri = false;
-    pet.move.lf = true;
-  }
-  if (pet.x <= pet.xmin) {
-    pet.move.ri = true;
-    pet.move.lf = false;
-  }
+    if(pet.currentState === 'fine'){
+        statefine()
+    }
+    if(pet.currentState === 'hungry'){
+        statefine()
+    }
+    if(pet.currentState === 'sleepy'){
+        statefine()
+    }
+    if(pet.currentState === 'bored'){
+        statefine()
+    }
+
 }
+
+function statefine(){
+    pet.speed = 5
+    if (pet.x >= pet.xmax - 4) {
+        pet.move.ri = false;
+        pet.move.lf = true;
+      }
+    if (pet.x <= pet.xmin + 4) {
+        pet.move.ri = true;
+        pet.move.lf = false;
+    }
+}
+function stateHungry(){
+
+}
+function stateSleep(){
+
+}
+function stateBored(){
+
+}
+
+
+
+
 
 function feed() {
   if (pet.belly < 10) {
