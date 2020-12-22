@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <script src="js/jquery.js" defer></script>
     <script src="js/app.js" defer></script>
     <title>Tomagotchi</title>
@@ -18,13 +19,23 @@
                     <div class="gauge" id='fun'>Entertainment:</div>
                     <div class="age" id="age">age:</div>
                 </div>
-                <input type="text" value="Kirby">
+                <div>
+                    <h1>Name</h1>
+                    <input type="text" id='name' value="Kirby">
+
+                </div>
             </div>
             <div class="bottom-ui ui-comp">
                 <div class="actions">
-                    <buttons class="action" id="feedBtn"></buttons>
-                    <buttons class="action" id="sleepBtn"></buttons>
-                    <buttons class="action" id="playBtn"></buttons>
+                    <buttons class="action" id="feedBtn">
+                        <i class="fas fa-drumstick-bite"></i>
+                    </buttons>
+                    <buttons class="action" id="sleepBtn">
+                        <i class="fas fa-bed"></i>
+                    </buttons>
+                    <buttons class="action" id="playBtn">
+                        <i class="fas fa-basketball-ball"></i>
+                    </buttons>
                 </div>
             </div>
         </div>
@@ -32,5 +43,9 @@
             <img src="assets/kirby.jpg" id="pet">
         </div>
     </div>
+    <audio src="assets/30 minutes of kirby music to make you feel better.mp3" id='music'></audio>
+
 </body>
 </html>
+
+
