@@ -58,7 +58,6 @@ body {
     height: 60px;
     width: 60px;
     border-radius: 30px;
-    background-color: rgb(168, 126, 207);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -101,7 +100,9 @@ body {
     margin: 0 10px;
 }
 
-
+.gauge{
+    margin: 4px 0 0 6px;
+}
 
 #pet{
     position: absolute;
@@ -117,4 +118,17 @@ body {
 
 .hidden{
     opacity: 0;
+}
+
+#feedBtn{
+    background-color: #c67626;
+}
+
+#sleepBtn{
+    background-color: #4caf4f;
+
+}
+
+#playBtn{
+    background-color: #683ab7;
 }

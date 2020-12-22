@@ -166,7 +166,12 @@ function sleep() {
 
 function play() {
   if (pet.fun < 10) {
-    pet.fun++;
+    if(pet.fun>9){
+      pet.fun = 10
+    }else{
+      pet.fun++;
+
+    }
   }
 }
 
@@ -205,12 +210,20 @@ function update() {
 }
 
 function uiUpdate() {
-  bellyEl.text(`Belly: ${Math.ceil(pet.belly)}`);
-  energyEl.text(`Energy: ${Math.ceil(pet.energy)}`);
-  funEl.text(`Entertainment: ${Math.ceil(pet.fun)}`);
+  const belly = Math.ceil(pet.belly)
+  const energy = Math.ceil(pet.energy)
+  const fun = Math.ceil(pet.fun)
+  gaugeUi(belly,energy,fun)
   ageEl.text(`age: ${Math.floor(pet.age)} sec`);
   mesEl.text(`${$("#name")[0].value} is ${pet.currentState}`)
 }
+
+function gaugeUi(belly,energy,fun) {
+  bellyEl.attr('src',`assets/Bars/food/pixil-frame-0 (${belly}).png`)
+  energyEl.attr('src',`assets/Bars/energy/pixil-frame-0 (${energy}).png`)
+  funEl.attr('src',`assets/Bars/fun/pixil-frame-0 (${fun}).png`)
+}
+
 
 function petUpdate() {
   pet.belly -= pet.appetite;
