@@ -196,15 +196,18 @@ function feed() {
 }
 
 function createFood() {
+  if (pet.alive) {
     $('#food').removeClass('hidden')
     food.x = getRand(food.xmax,food.xmin)
     food.y = getRand(food.ymax,food.ymin)
     food.element.style.left = `${food.x}px`;
     food.element.style.top = `${food.y}px`;
+  }
 }
 
 function sleep() {
   if (pet.energy < 10) {
+    pet.spriteFrame = 0
     pet.currentState = pet.conditions[4];
   }
 }
@@ -222,11 +225,12 @@ function play() {
 
 //ANCHOR update each frame
 function update() {
+  if(!playwin.pause){  
   uiUpdate();
   petUpdate();
   pet.moveFunction();
   petAi();
-  frame++
+  frame++}
 }
 
 function uiUpdate() {
@@ -234,7 +238,7 @@ function uiUpdate() {
   const energy = Math.ceil(pet.energy)
   const fun = Math.ceil(pet.fun)
   gaugeUi(belly,energy,fun)
-  ageEl.text(`age: ${Math.floor(pet.age)} sec`);
+  ageEl.text(`${Math.floor(pet.age)} sec old`);
   mesEl.text(`${$("#name")[0].value} is ${pet.currentState}`)
 }
 
@@ -259,19 +263,22 @@ function petUpdate() {
 }
 
 function conditionCheck() {
-  if (pet.currentState === 'sleeping'){
+  if (pet.currentState === pet.conditions[4]){
     if(pet.energy<10){
       pet.belly += pet.appetite;
       pet.energy += 0.2+pet.stamina;
       pet.fun += pet.attention;
       if (pet.energy > 10) {
         pet.energy = 10
-        pet.currentState = pet.conditions[0]
+        pet.move.ri = true
+        pet.currentState === ''
+        conditionCheck()
       }
       return
     } 
     
-  } else {
+  } 
+
     if (pet.belly>=5 && pet.energy>=5 && pet.fun>=5) {
         pet.currentState=pet.conditions[0]
     } else
@@ -284,7 +291,7 @@ function conditionCheck() {
     if (pet.fun < 5 && pet.fun<=pet.energy && pet.fun<=pet.belly) {
         pet.currentState=pet.conditions[3]
     }
-  }
+  
 }
 
 //ANCHOR function utility
@@ -332,7 +339,12 @@ function Init() {
 }
 
 function pause() {
-  
+  playwin.pause = !playwin.pause
+  if(playwin.pause){
+    $("#music")[0].pause()
+  }else{
+    $("#music")[0].play()
+  }
 }
 
 function mute(){
@@ -358,7 +370,8 @@ playwin = {
   height: 600,
   width: 800,
   element: $('.play-space'),
-  mute: false
+  mute: false,
+  pause: false
 };
 
 const pet = new petClass(
@@ -379,7 +392,7 @@ let frame = 0
 const bellyEl = $("#belly");
 const energyEl = $("#energy");
 const funEl = $("#fun");
-const ageEl = $("#age");
+const ageEl = $("#age-display");
 const mesEl = $("#message");
 const ctx = playwin.element.getContext
 
