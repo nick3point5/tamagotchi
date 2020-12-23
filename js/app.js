@@ -50,6 +50,10 @@ class interObj {
       this.element.style.transform = 'scaleX(1)'
     }
   }
+  postion(){
+    this.element.style.left = `${this.x}px`
+    this.element.style.top = `${this.y}px`
+  }
 }
 
 class foodClass extends interObj{
@@ -69,10 +73,16 @@ class petClass extends interObj {
     this.stamina = 0.01;
     this.attention = 0.01;
     this.speed = 5;
-    this.conditions = ['happy','hungry','sleepy','bored','sleeping','eating']
+    this.conditions = ['happy','hungry','sleepy','bored','sleeping','eating','singing']
     this.currentState = 'happy'
     this.spriteFrame = 0
     this.spriteFrameRate = 1
+    this.spriteAnimationLength = {
+      walking: 9,
+      sleeping: 4,
+      eating: 12,
+      singing: 30,
+    }
     this.spriteFrameMax = 9
 
     this.move = {
@@ -85,11 +95,13 @@ class petClass extends interObj {
     this.alive = false;
   }
   spriteFile(){
-    let imgURL = ['assets/sprites/walking/','assets/sprites/sleeping/','assets/sprites/eating/']
+    let imgURL = ['assets/sprites/walking/','assets/sprites/sleeping/','assets/sprites/eating/','assets/sprites/singing/']
     if(this.currentState === pet.conditions[4]){
       return `${imgURL[1]}${this.spriteFrame}.png`
     } else if(this.currentState === pet.conditions[5]){
       return `${imgURL[2]}${this.spriteFrame}.png`
+    } else if(this.currentState === pet.conditions[6] && pet.collision(stage)){
+      return `${imgURL[3]}${this.spriteFrame}.png`
     } else {
       return `${imgURL[0]}${this.spriteFrame}.png`
     }
@@ -101,6 +113,29 @@ class petClass extends interObj {
     this.element.setAttribute('src', this.spriteFile())
   
     this.spriteFrame++
+  }
+  trackdown(target) {
+    if (this.x < target.x) {
+      this.move.ri = true;
+      this.move.lf = false;
+    }else{
+      this.move.ri = false;
+      this.move.lf = true;
+    }
+  if (this.y > target.y) {
+      this.move.up = true;
+      this.move.dn = false;
+  }else{
+      this.move.up = false;
+      this.move.dn = true;
+  }
+  }
+  stop(){
+    this.speed = 0
+    this.move.up = false
+    this.move.ri = false
+    this.move.dn = false
+    this.move.lf = false
   }
 }
 
@@ -124,6 +159,9 @@ function petAi() {
     if(pet.currentState === pet.conditions[5]){
       stateEating()
     }
+    if(pet.currentState === pet.conditions[6]){
+      stateSinging()
+    }
 
 }
 
@@ -137,27 +175,12 @@ function stateHappy(){
         pet.move.ri = true;
         pet.move.lf = false;
     }
-    pet.spriteFrameMax = 9
+    pet.spriteFrameMax = pet.spriteAnimationLength.walking
     pet.spriteFrameRate = 2
 }
 function stateHungry(){
     pet.speed = 10
-    // const food = $('#food')[0]
-    if (pet.x < food.x) {
-        pet.move.ri = true;
-        pet.move.lf = false;
-      }else{
-        pet.move.ri = false;
-        pet.move.lf = true;
-      }
-    if (pet.y > food.y) {
-        pet.move.up = true;
-        pet.move.dn = false;
-    }else{
-        pet.move.up = false;
-        pet.move.dn = true;
-    }
-    
+    pet.trackdown(food)
     if(pet.collision(food)){
         pet.spriteFrame = 0
         stateEating()
@@ -166,7 +189,7 @@ function stateHungry(){
         food.x = -food.width
         food.y = food.ymax + food.height
     }
-    pet.spriteFrameMax = 9
+    pet.spriteFrameMax = pet.spriteAnimationLength.walking
     pet.spriteFrameRate = 1
 }
 function stateSleepy(){
@@ -179,7 +202,7 @@ function stateSleepy(){
         pet.move.ri = true;
         pet.move.lf = false;
     }
-    pet.spriteFrameMax = 9
+    pet.spriteFrameMax = pet.spriteAnimationLength.walking
     pet.spriteFrameRate = 3
 }
 function stateBored(){
@@ -187,24 +210,30 @@ function stateBored(){
 }
 
 function stateSleeping() {
-    pet.speed = 0
-    pet.move.up = false
-    pet.move.ri = false
-    pet.move.dn = false
-    pet.move.lf = false
-    pet.spriteFrameMax = 4
+    pet.stop()
+    pet.spriteFrameMax = pet.spriteAnimationLength.sleeping
     pet.spriteFrameRate = 3
 }
 
 function stateEating() {
-  pet.speed = 0
-  pet.move.up = false
-  pet.move.ri = false
-  pet.move.dn = false
-  pet.move.lf = false
-  pet.spriteFrameMax = 12
-  pet.spriteFrameRate = 1 
-  pet.belly=10
+  pet.stop()
+  pet.spriteFrameMax = pet.spriteAnimationLength.eating
+  pet.spriteFrameRate = 1
+}
+
+function stateSinging() {
+  pet.speed = 10
+  pet.spriteFrameRate = 1
+    if(!pet.collision(stage)){
+      pet.trackdown(stage)
+    } else {
+      pet.stop()
+      pet.spriteFrameMax = pet.spriteAnimationLength.singing
+      pet.spriteFrameRate = 2
+    }
+
+
+
 }
 
 
@@ -218,8 +247,7 @@ function createFood() {
     $('#food').removeClass('hidden')
     food.x = getRand(food.xmax,food.xmin)
     food.y = getRand(food.ymax,food.ymin)
-    food.element.style.left = `${food.x}px`;
-    food.element.style.top = `${food.y}px`;
+    food.postion()
   }
 }
 
@@ -232,12 +260,8 @@ function sleep() {
 
 function play() {
   if (pet.fun < 10) {
-    if(pet.fun>9){
-      pet.fun = 10
-    }else{
-      pet.fun++;
-
-    }
+    pet.spriteFrame = 0
+    pet.currentState = pet.conditions[6];
   }
 }
 
@@ -303,7 +327,7 @@ function conditionCheck() {
     }
     
     
-    if(pet.spriteFrame === 11){
+    if(pet.spriteFrame === pet.spriteAnimationLength.eating){
       pet.move.ri = true
       pet.currentState = ''
       pet.belly=10
@@ -317,6 +341,24 @@ function conditionCheck() {
       return
     }
   } 
+
+  if (pet.currentState === pet.conditions[6]){    
+    if(pet.spriteFrame === pet.spriteAnimationLength.singing){
+      pet.move.ri = true
+      pet.currentState = ''
+      pet.fun=10
+      pet.spriteFrame = 0
+      conditionCheck()
+    }else{
+      pet.belly += pet.appetite;
+      pet.energy += pet.stamina;
+      pet.fun += pet.attention;
+      
+      return
+    }
+  } 
+
+
 
     if (pet.belly>=5 && pet.energy>=5 && pet.fun>=5) {
         pet.currentState=pet.conditions[0]
@@ -363,6 +405,7 @@ function gameover() {
   $("#music")[0].pause();
   $("#music")[0].currentTime = 0;
   $("#pet").addClass('hidden')
+  $('#food').addClass('hidden')
 }
 
 function Init() {
@@ -426,6 +469,8 @@ const food =  new foodClass(0,0,$('#food')[0]);
 food.x = -food.width
 food.y = food.ymax + food.height
 
+const stage = new interObj(playwin.width/2,playwin.height/2,100,100,'')
+
 let frame = 0
 
 const bellyEl = $("#belly");
@@ -436,3 +481,4 @@ const mesEl = $("#message");
 const ctx = playwin.element.getContext
 
 assignEvents()
+mute()
