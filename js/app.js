@@ -69,9 +69,9 @@ class petClass extends interObj {
     this.energy = 10;
     this.fun = 10;
     this.age = 0;
-    this.appetite = 0.05;
+    this.appetite = 0.02;
     this.stamina = 0.01;
-    this.attention = 0.01;
+    this.attention = 0.015;
     this.speed = 5;
     this.conditions = ['happy','hungry','sleepy','bored','sleeping','eating','singing']
     this.currentState = 'happy'
@@ -206,7 +206,17 @@ function stateSleepy(){
     pet.spriteFrameRate = 3
 }
 function stateBored(){
-
+  pet.speed = 3
+  if (pet.x >= pet.xmax - 4) {
+      pet.move.ri = false;
+      pet.move.lf = true;
+    }
+  if (pet.x <= pet.xmin + 4) {
+      pet.move.ri = true;
+      pet.move.lf = false;
+  }
+  pet.spriteFrameMax = pet.spriteAnimationLength.walking
+  pet.spriteFrameRate = 2
 }
 
 function stateSleeping() {
@@ -418,6 +428,10 @@ function Init() {
   pet.y = pet.ymax;
   $("#music")[0].play();
   $("#pet").removeClass('hidden')
+  if(pet.width === 0 || pet.height === 0){
+    pet.width = $("#pet")[0].clientWidth
+    pet.height = $("#pet")[0].clientHeight
+  }
 }
 
 function pause() {
