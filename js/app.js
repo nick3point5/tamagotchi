@@ -65,11 +65,11 @@ class petClass extends interObj {
     this.energy = 10;
     this.fun = 10;
     this.age = 0;
-    this.appetite = 0.01;
+    this.appetite = 0.05;
     this.stamina = 0.01;
     this.attention = 0.01;
     this.speed = 5;
-    this.conditions = ['happy','hungry','sleepy','bored','sleeping']
+    this.conditions = ['happy','hungry','sleepy','bored','sleeping','eating']
     this.currentState = 'happy'
     this.spriteFrame = 0
     this.spriteFrameRate = 1
@@ -85,11 +85,13 @@ class petClass extends interObj {
     this.alive = false;
   }
   spriteFile(){
-    let imgURL = ''
+    let imgURL = ['assets/sprites/walking/','assets/sprites/sleeping/','assets/sprites/eating/']
     if(this.currentState === pet.conditions[4]){
-      return `assets/sprites/sleeping/${this.spriteFrame}.png`
-    } else{
-      return `assets/sprites/walking/${this.spriteFrame}.png`
+      return `${imgURL[1]}${this.spriteFrame}.png`
+    } else if(this.currentState === pet.conditions[5]){
+      return `${imgURL[2]}${this.spriteFrame}.png`
+    } else {
+      return `${imgURL[0]}${this.spriteFrame}.png`
     }
   }
   drawSprite() {
@@ -118,7 +120,10 @@ function petAi() {
     }
     if(pet.currentState === pet.conditions[4]){
         stateSleeping()
-  }
+    }
+    if(pet.currentState === pet.conditions[5]){
+      stateEating()
+    }
 
 }
 
@@ -154,8 +159,10 @@ function stateHungry(){
     }
     
     if(pet.collision(food)){
-        pet.belly=10
-        $('#food').addClass('hidden')
+        pet.spriteFrame = 0
+        stateEating()
+        pet.currentState = pet.conditions[5]
+        
         food.x = -food.width
         food.y = food.ymax + food.height
     }
@@ -187,6 +194,17 @@ function stateSleeping() {
     pet.move.lf = false
     pet.spriteFrameMax = 4
     pet.spriteFrameRate = 3
+}
+
+function stateEating() {
+  pet.speed = 0
+  pet.move.up = false
+  pet.move.ri = false
+  pet.move.dn = false
+  pet.move.lf = false
+  pet.spriteFrameMax = 12
+  pet.spriteFrameRate = 1 
+  pet.belly=10
 }
 
 
@@ -271,12 +289,33 @@ function conditionCheck() {
       if (pet.energy > 10) {
         pet.energy = 10
         pet.move.ri = true
-        pet.currentState === ''
+        pet.currentState = ''
         conditionCheck()
       }
       return
     } 
+  } 
+
+
+  if (pet.currentState === pet.conditions[5]){
+    if(pet.spriteFrame === 5){
+      $('#food').addClass('hidden')
+    }
     
+    
+    if(pet.spriteFrame === 11){
+      pet.move.ri = true
+      pet.currentState = ''
+      pet.belly=10
+      pet.spriteFrame = 0
+      conditionCheck()
+    }else{
+      pet.belly += pet.appetite;
+      pet.energy += pet.stamina;
+      pet.fun += pet.attention;
+      
+      return
+    }
   } 
 
     if (pet.belly>=5 && pet.energy>=5 && pet.fun>=5) {
@@ -349,7 +388,7 @@ function pause() {
 
 function mute(){
   playwin.mute = !playwin.mute
-  $('audio')[0].muted = !playwin.mute
+  $('audio')[0].muted = playwin.mute
 
 }
 
