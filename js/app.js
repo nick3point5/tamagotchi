@@ -431,6 +431,8 @@ function Init() {
   if(pet.width === 0 || pet.height === 0){
     pet.width = $("#pet")[0].clientWidth
     pet.height = $("#pet")[0].clientHeight
+    pet.xmax = playwin.width - pet.width;
+    pet.ymax = playwin.height - pet.height;
   }
 }
 
