@@ -95,7 +95,7 @@ class petClass extends interObj {
     this.alive = false;
   }
   spriteFile(){
-    let imgURL = ['assets/sprites/walking/','assets/sprites/sleeping/','assets/sprites/eating/','assets/sprites/singing/']
+    let imgURL = ['assets/sprites/walking/','assets/sprites/sleeping/','assets/sprites/eating/','assets/sprites/sing/']
     if(this.currentState === pet.conditions[4]){
       return `${imgURL[1]}${this.spriteFrame}.png`
     } else if(this.currentState === pet.conditions[5]){
