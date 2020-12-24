@@ -433,6 +433,10 @@ function Init() {
     pet.height = $("#pet")[0].clientHeight
     pet.xmax = playwin.width - pet.width;
     pet.ymax = playwin.height - pet.height;
+    food.width = $("#food")[0].clientWidth
+    food.height = $("#food")[0].clientHeight
+    food.xmax = playwin.width - food.width;
+    food.ymax = playwin.height - food.height;
   }
 }
 
