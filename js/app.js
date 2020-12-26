@@ -42,12 +42,12 @@ class interObj {
     if (this.move.lf && this.x - this.speed >= this.xmin) {
       this.x -= this.speed;
       this.element.style.left = `${this.x}px`;
-      this.element.style.transform = 'scaleX(-1)'
+      this.element.style.transform = `scale(${-this.growth},${this.growth})`
     }
     if (this.move.ri && this.x + this.speed <= this.xmax) {
       this.x += this.speed;
       this.element.style.left = `${this.x}px`;
-      this.element.style.transform = 'scaleX(1)'
+      this.element.style.transform = `scale(${this.growth},${this.growth})`
     }
   }
   postion(){
@@ -65,6 +65,8 @@ class foodClass extends interObj{
 class petClass extends interObj {
   constructor(x,y,width,height,element) {
     super(x,y,width,height,element);
+    this.owid=width
+    this.ohei=height
     this.belly = 10;
     this.energy = 10;
     this.fun = 10;
@@ -73,6 +75,8 @@ class petClass extends interObj {
     this.stamina = 0.01;
     this.attention = 0.015;
     this.speed = 5;
+    this.age = 0;
+    this.growth = 1;
     this.conditions = ['happy','hungry','sleepy','bored','sleeping','eating','singing']
     this.currentState = 'happy'
     this.spriteFrame = 0
@@ -137,6 +141,19 @@ class petClass extends interObj {
     this.move.dn = false
     this.move.lf = false
   }
+
+  aging(){
+    if(this.growth<3){
+      this.growth = 1+this.age/100
+      const xdif = this.owid*(this.growth-1)
+      const ydif = this.ohei*(this.growth-1)
+      this.element.style.transform = `scale(${this.growth},${this.growth})`
+      this.width=Math.ceil(this.owid+xdif)
+      this.height=Math.ceil(this.ohei+ydif)
+      this.postion()
+    }
+  }
+
 }
 
 //ANCHOR pet behaviors
@@ -305,6 +322,7 @@ function petUpdate() {
   pet.energy -= pet.stamina;
   pet.fun -= pet.attention;
   pet.age += 1 / 20;
+  pet.aging()
   if (pet.belly <= 0 || pet.energy <= 0 || pet.fun <= 0) {
     pet.alive = false;
   }

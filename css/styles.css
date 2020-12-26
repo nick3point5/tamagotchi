@@ -78,6 +78,7 @@ body {
   height: 600px;
   transform: translateY(var(--uiHeight));
   position: relative;
+  overflow: hidden;
 }
 .bottom-ui{
   display: flex;
