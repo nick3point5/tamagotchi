@@ -459,24 +459,35 @@ function Init() {
 }
 
 function pause() {
-  playwin.pause = !playwin.pause
-  if(playwin.pause){
-    $("#music")[0].pause()
-  }else{
-    $("#music")[0].play()
+  if(pet.alive){
+    playwin.pause = !playwin.pause
+    if(playwin.pause){
+      $("#music")[0].pause()
+    }else{
+      $("#music")[0].play()
+    }
+    if( playwin.pause){
+      $('img.icon.pause').attr('src','assets/icons/play_arrow-24px.svg')
+    }else{
+      $('img.icon.pause').attr('src','assets/icons/pause-24px.svg')
+    }
   }
 }
 
 function mute(){
   playwin.mute = !playwin.mute
   $('audio')[0].muted = playwin.mute
-
+  if( playwin.mute){
+    $('img.icon.mute').attr('src','assets/icons/volume_off-24px.svg')
+  }else{
+    $('img.icon.mute').attr('src','assets/icons/volume_up-24px.svg')
+  }
 }
 
 function assignEvents() {
   $("#feedBtn").on("click", feed);
   $("#sleepBtn").on("click", sleep);
-  $("#playBtn").on("click", play);
+  $("#funBtn").on("click", play);
   $('#pauseBtn').on("click",pause)
   $('#muteBtn').on("click",mute)
   if (!pet.alive) {
