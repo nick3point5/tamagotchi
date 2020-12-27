@@ -12,6 +12,7 @@
   padding: 0;
   margin: 0;
   font-family: Roboto;
+  user-select: none;
 }
 
 /* ANCHOR elements */
@@ -177,6 +178,7 @@ body {
 #name {
   font-size: 32px;
   width: 196px;
+  user-select: all;
 }
 
 #age-display{
